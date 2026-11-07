@@ -1,0 +1,38 @@
+@{
+    ViewData["Title"] = "Automóviles e ingresos";
+}
+
+<p>Selecciona un tipo y consulta sus automóviles. Después selecciona un automóvil para ver sus ingresos a parqueos.</p>
+
+<form id="consulta-tipo"
+      data-url="@Url.Action("ConsultarPorTipo", "Automoviles")"
+      data-ingresos-url="@Url.Action("IngresosPorAutomovil", "Automoviles")">
+    <div class="field">
+        <label for="tipo-automovil">Tipo de automóvil</label>
+        <select id="tipo-automovil" name="tipo" required>
+            <option value="">Selecciona un tipo</option>
+            <option value="sedán">Sedán</option>
+            <option value="4x4">4x4</option>
+            <option value="moto">Moto</option>
+        </select>
+    </div>
+    <button type="submit">Consultar</button>
+</form>
+
+<p id="mensaje-consulta" role="status" aria-live="polite"></p>
+
+<section id="resultado-automoviles" aria-live="polite">
+    <h2>Automóviles</h2>
+    <div id="lista-automoviles"></div>
+</section>
+
+<section id="panel-ingresos" hidden aria-live="polite">
+    <h2 id="titulo-ingresos">Ingresos del automóvil</h2>
+    <div id="tabla-ingresos"></div>
+</section>
+
+<p><a asp-action="Index">Volver a automóviles</a></p>
+
+@section Scripts {
+    <script src="~/js/automoviles-maestro-detalle.js" asp-append-version="true"></script>
+}

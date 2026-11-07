@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - Parqueo</title>
+    <style>
+        body { font-family: system-ui, sans-serif; margin: 0; color: #202938; background: #f4f6f8; }
+        header, main { max-width: 1000px; margin: auto; padding: 1rem 1.5rem; }
+        header { background: #183153; color: white; max-width: none; }
+        header a { color: white; text-decoration: none; font-weight: 700; }
+        main { background: white; margin-top: 2rem; border-radius: .5rem; }
+        .toolbar, .filters, .actions { display: flex; flex-wrap: wrap; gap: .75rem; align-items: end; }
+        .filters { margin: 1rem 0; padding: 1rem; background: #f4f6f8; border-radius: .4rem; }
+        label { display: block; font-weight: 600; margin-bottom: .3rem; }
+        input, select, button, .button { padding: .55rem .7rem; font: inherit; }
+        button, .button { border: 0; border-radius: .3rem; background: #1769aa; color: white; text-decoration: none; cursor: pointer; }
+        .secondary { background: #596579; }
+        .danger { background: #a12622; }
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        th, td { padding: .7rem; border-bottom: 1px solid #d9dee5; text-align: left; }
+        .validation, .error { color: #a12622; }
+        .success { padding: .75rem; background: #e5f5e9; color: #17612b; border-radius: .3rem; }
+        .field { margin: 1rem 0; }
+        dl { display: grid; grid-template-columns: max-content 1fr; gap: .75rem 1.5rem; }
+        dt { font-weight: 700; }
+        dd { margin: 0; }
+    </style>
+</head>
+<body>
+    <header><a asp-controller="Automoviles" asp-action="Index">Sistema de parqueo</a></header>
+    <main>
+        <h1>@ViewData["Title"]</h1>
+        @if (TempData["Mensaje"] is string mensaje)
+        {
+            <p class="success">@mensaje</p>
+        }
+        @RenderBody()
+    </main>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

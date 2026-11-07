@@ -1,0 +1,39 @@
+@model AutomovilViewModel
+@{
+    var formAction = (string?)ViewData["FormAction"] ?? "Create";
+    var submitLabel = (string?)ViewData["SubmitLabel"] ?? "Guardar";
+}
+
+<form asp-action="@formAction" asp-route-id="@(Model.Id > 0 ? Model.Id : null)" method="post">
+    <input asp-for="Id" type="hidden" />
+    <div asp-validation-summary="All" class="validation"></div>
+    <div class="field">
+        <label asp-for="Color"></label>
+        <input asp-for="Color" maxlength="40" />
+        <span asp-validation-for="Color" class="error"></span>
+    </div>
+    <div class="field">
+        <label asp-for="Anio"></label>
+        <input asp-for="Anio" type="number" min="1886" max="2100" />
+        <span asp-validation-for="Anio" class="error"></span>
+    </div>
+    <div class="field">
+        <label asp-for="Fabricante"></label>
+        <input asp-for="Fabricante" maxlength="80" />
+        <span asp-validation-for="Fabricante" class="error"></span>
+    </div>
+    <div class="field">
+        <label asp-for="Tipo"></label>
+        <select asp-for="Tipo">
+            <option value="">Selecciona un tipo</option>
+            <option value="sedán">Sedán</option>
+            <option value="4x4">4x4</option>
+            <option value="moto">Moto</option>
+        </select>
+        <span asp-validation-for="Tipo" class="error"></span>
+    </div>
+    <div class="actions">
+        <button type="submit">@submitLabel</button>
+        <a class="button secondary" asp-action="Index">Cancelar</a>
+    </div>
+</form>

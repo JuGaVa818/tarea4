@@ -2,7 +2,7 @@
 
 API en .NET 8 con repositorios para PostgreSQL/EF Core y JSON local.
 
-## Ejecutar la API con JSON local
+## Ejecutar la API
 
 Desde la raíz del repositorio:
 
@@ -10,8 +10,11 @@ Desde la raíz del repositorio:
 dotnet run --project Parqueo\Parqueo.csproj
 ```
 
-Por defecto, la API utiliza los tres JSON copiados junto al ejecutable. Las
-escrituras de los repositorios JSON reemplazan el archivo de forma atómica.
+El archivo `Parqueo\appsettings.json` selecciona PostgreSQL para los tres
+repositorios: automóviles, parqueos e ingresos. Configura primero la cadena
+localmente con User Secrets siguiendo la sección correspondiente. Para ejecutar
+en modo JSON en lugar de PostgreSQL, usa
+`-- --Storage:Mode json`; los tres repositorios usarán sus archivos JSON.
 
 ## API de automóviles
 
@@ -47,6 +50,27 @@ Ejemplo de JSON:
 Los parámetros de filtro son opcionales y se combinan con AND. Los filtros de
 color, fabricante y tipo permiten coincidencias parciales sin distinguir
 mayúsculas/minúsculas. `anioDesde` y `anioHasta` delimitan el intervalo inclusivo.
+
+## MVC de automóviles
+
+La interfaz MVC cliente está en `Parqueo.Mvc` y llama por HTTP a los endpoints
+del API de automóviles. Ejecuta primero el API y después el cliente MVC:
+
+```powershell
+dotnet run --project Parqueo\Parqueo.csproj -- --urls http://localhost:5195
+dotnet run --project Parqueo.Mvc\Parqueo.Mvc.csproj -- --urls http://localhost:5196
+```
+
+Abre `http://localhost:5196`. En la lista se pueden indicar los años inferior y
+superior para que el API devuelva los vehículos del intervalo inclusivo. Cada
+registro ofrece **Detalles**, **Editar** y **Borrar**. Crear llama al `POST`,
+editar al `PUT`, borrar al `DELETE`; el listado y los detalles usan `GET`.
+La URL base del API se configura en `Parqueo.Mvc\appsettings.json` (`Api:BaseUrl`).
+
+La opción **Consultar por tipo e ingresos** muestra automóviles por tipo y
+permite seleccionar uno para consultar sus ingresos. El panel de detalle
+presenta parqueo, entrada, salida, duración y monto; si el ingreso sigue abierto,
+los valores de salida y cobro se indican como pendientes.
 
 ## API de parqueos
 
@@ -130,13 +154,20 @@ asignados por el profesor; no pongas esos valores en código ni en Git:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\Parqueo\configurar-conexion.ps1
-dotnet run --project Parqueo\Parqueo.csproj -- --Storage:Mode postgres
+dotnet run --project Parqueo\Parqueo.csproj
 ```
 
 El script pide la contraseña de forma oculta y la guarda en User Secrets, fuera
 del repositorio. Sus valores predeterminados son el host
 `postgresql-hecferme.postgres.database.azure.com`, la base
 `advanced_programming` y el usuario `user_03`; puedes cambiarlos en los prompts.
+La configuración versionada establece `Storage:Mode` en `postgres`, y la
+cadena sensible se lee desde `ConnectionStrings:Parqueo` en User Secrets. Los
+controladores MVC consultan los endpoints HTTP del API; el API resuelve esos
+endpoints mediante `IAutomovilRepository`, `IParqueoRepository` e
+`IIngresoAutomovilRepository`, todos registrados con sus implementaciones EF
+Core en modo PostgreSQL. Así, las operaciones MVC/API de las tres entidades
+consultan las tablas `PRQ_*` y no los JSON.
 El script [diseño-bd.sql](./Parqueo/dise%C3%B1o-bd.sql) crea las tablas e índices
 de forma idempotente en el esquema `user_03`. Puedes ejecutarlo con `psql`
 después de configurar el cliente:

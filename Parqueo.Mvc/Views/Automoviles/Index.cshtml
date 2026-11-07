@@ -1,0 +1,60 @@
+@model AutomovilesIndexViewModel
+@{
+    ViewData["Title"] = "Automóviles";
+}
+
+<div class="toolbar">
+    <a class="button" asp-action="Create">Registrar automóvil</a>
+    <a class="button secondary" asp-action="MaestroDetalle">Consultar por tipo e ingresos</a>
+</div>
+
+<form class="filters" method="get" asp-action="Index">
+    <div>
+        <label asp-for="AnioDesde">Año inferior</label>
+        <input asp-for="AnioDesde" type="number" min="1886" max="2100" />
+    </div>
+    <div>
+        <label asp-for="AnioHasta">Año superior</label>
+        <input asp-for="AnioHasta" type="number" min="1886" max="2100" />
+    </div>
+    <button type="submit">Consultar</button>
+    <a class="button secondary" asp-action="Index">Limpiar</a>
+</form>
+<div asp-validation-summary="All" class="validation"></div>
+
+@if (Model.Automoviles.Count == 0)
+{
+    <p>No se encontraron automóviles para el intervalo indicado.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Color</th>
+                <th>Año</th>
+                <th>Fabricante</th>
+                <th>Tipo</th>
+                <th>Mantenimiento</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var automovil in Model.Automoviles)
+        {
+            <tr>
+                <td>@automovil.Id</td>
+                <td>@automovil.Color</td>
+                <td>@automovil.Anio</td>
+                <td>@automovil.Fabricante</td>
+                <td>@automovil.Tipo</td>
+                <td class="actions">
+                    <a asp-action="Details" asp-route-id="@automovil.Id">Detalles</a>
+                    <a asp-action="Edit" asp-route-id="@automovil.Id">Editar</a>
+                    <a asp-action="Delete" asp-route-id="@automovil.Id">Borrar</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

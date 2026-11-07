@@ -1,0 +1,18 @@
+@model AutomovilViewModel
+@{
+    ViewData["Title"] = "Borrar automóvil";
+}
+
+<div asp-validation-summary="All" class="validation"></div>
+<p>¿Confirma que desea borrar este automóvil?</p>
+<dl>
+    <dt>ID</dt><dd>@Model.Id</dd>
+    <dt>Color</dt><dd>@Model.Color</dd>
+    <dt>Año</dt><dd>@Model.Anio</dd>
+    <dt>Fabricante</dt><dd>@Model.Fabricante</dd>
+    <dt>Tipo</dt><dd>@Model.Tipo</dd>
+</dl>
+<form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+    <button class="danger" type="submit">Confirmar borrado</button>
+    <a class="button secondary" asp-action="Index">Cancelar</a>
+</form>
